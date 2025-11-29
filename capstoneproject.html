@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Foodie — Order Online</title>
+  <meta name="description" content="Foodie — order from the best restaurants in your city. Fast delivery, simple checkout." />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{--bg:#f7f8fb;--card:#fff;--muted:#6b7280;--accent:#ff6b4a;--green:#10b981;--max-width:1100px}
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:0;background:var(--bg);color:#0f172a}
+    a{color:inherit}
+
+    .container{max-width:var(--max-width);margin:0 auto;padding:0 16px}
+
+    /* header */
+    .site-header{background:#fff;border-bottom:1px solid #e6e9ef;position:sticky;top:0;z-index:60}
+    .header-inner{display:flex;align-items:center;gap:18px;padding:12px 0}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo-img{width:44px;height:44px;border-radius:8px;background:#eee;object-fit:cover}
+    .brand-name{font-weight:700;font-size:18px}
+    .primary-nav ul{display:flex;gap:12px;margin:0;padding:0;list-style:none}
+    .primary-nav a{padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--muted)}
+
+    .header-cta{margin-left:auto;display:flex;gap:8px;align-items:center}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:1px solid transparent;cursor:pointer}
+    .btn-primary{background:var(--accent);color:#fff}
+    .btn-outline{background:transparent;border-color:#ddd}
+    .btn-sm{padding:6px 10px;font-size:14px}
+
+    /* layout */
+    main{padding:20px 0}
+    .hero{background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));padding:28px 0}
+    .hero-grid{display:grid;grid-template-columns:1fr 420px;gap:20px;align-items:center}
+    .hero-copy h1{margin:0 0 10px;font-size:28px}
+    .hero-copy p{margin:0 0 18px;color:var(--muted)}
+
+    .search-bar{display:flex;gap:10px;align-items:center}
+    .search-bar input,.search-bar select{padding:10px;border-radius:8px;border:1px solid #e2e8f0;background:#fff}
+    .btn-search{background:var(--green);color:white;border-radius:8px}
+
+    /* categories */
+    .categories{margin-top:18px}
+    .category-list{display:flex;gap:8px;padding:0;margin:8px 0 0;list-style:none;flex-wrap:wrap}
+    .category-btn{background:#fff;border:1px solid #eee;padding:8px 12px;border-radius:999px;cursor:pointer}
+
+    /* main grid: filters + content + cart */
+    .layout{display:grid;grid-template-columns:260px 1fr 340px;gap:18px;margin-top:22px}
+    @media (max-width:1000px){.hero-grid{grid-template-columns:1fr}.layout{grid-template-columns:1fr;}
+      .cart-drawer{position:fixed;right:0;bottom:0;top:0;width:340px;transform:translateX(100%);} }
+
+    /* sidebar */
+    .filters{background:var(--card);padding:14px;border-radius:12px;border:1px solid #eef2f6}
+    .filters label{display:block;margin-bottom:8px;color:var(--muted)}
+    .filters input[type="range"]{width:100%}
+
+    /* menu grid */
+    .menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    @media (max-width:700px){.menu-grid{grid-template-columns:1fr}}
+    .menu-card{display:flex;gap:12px;background:var(--card);padding:12px;border-radius:12px;border:1px solid #eef2f6;align-items:center}
+    .menu-img{width:96px;height:72px;border-radius:8px;object-fit:cover;background:#eee}
+    .menu-body h3{margin:0 0 6px;font-size:16px}
+    .muted{color:var(--muted);font-size:13px}
+    .menu-actions{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+    .price{font-weight:700}
+
+    /* restaurants grid */
+    .restaurants-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .card{background:var(--card);border-radius:12px;overflow:hidden;border:1px solid #eef2f6}
+    .card-img{width:100%;height:140px;object-fit:cover;background:#ddd}
+    .card-body{padding:10px}
+    .card-title{margin:0;font-size:16px}
+
+    /* promos / testimonials */
+    .offers, .testimonials{margin-top:18px}
+
+    /* cart */
+    .cart-drawer{background:var(--card);border-left:1px solid #e6e9ef;border-radius:12px;padding:16px;position:sticky;top:20px;height:calc(100vh - 40px)}
+    .cart-header{display:flex;align-items:center;justify-content:space-between}
+    .cart-list{margin-top:12px;display:flex;flex-direction:column;gap:8px;max-height:46vh;overflow:auto;padding-right:6px}
+    .cart-item{display:flex;gap:10px;align-items:center}
+    .cart-item img{width:56px;height:44px;border-radius:8px;object-fit:cover}
+    .qty{display:flex;gap:6px;align-items:center}
+    .cart-footer{margin-top:12px}
+
+    /* tiny helpers */
+    .muted-small{color:var(--muted);font-size:13px}
+    .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+    footer.site-footer{margin-top:32px;padding:18px 0;background:transparent}
+
+    /* checkout modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.5);z-index:80}
+    .modal.active{display:flex}
+    .modal-card{width:420px;background:#fff;padding:16px;border-radius:12px}
+  </style>
+</head>
+<body>
+  <a class="skip-link visually-hidden" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <!-- Inline SVG logo (fork & spoon) -->
+        <svg class="logo-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="56" height="56" aria-hidden="true" focusable="false">
+          <rect width="64" height="64" rx="12" fill="#ff6b4a"></rect>
+          <path d="M22 12c1 6 1 14-1 20-1 4-3 6-3 6s-3-2-4-6c-2-6-1-14 0-20 1-4 5-4 8 0z" fill="#fff" opacity="0.98"></path>
+          <path d="M42 12c-1 6-1 14 1 20 1 4 3 6 3 6s3-2 4-6c2-6 1-14 0-20-1-4-5-4-8 0z" fill="#fff" opacity="0.98"></path>
+          <path d="M30 42c0 6 4 10 6 10s6-4 6-10" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </svg>
+        <span class="brand-name">Foodie</span>
+      </div>
+
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <ul>
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#restaurants">Restaurants</a></li>
+          <li><a href="#offers">Offers</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-cta">
+        <button class="btn btn-outline" id="open-cart" aria-controls="cart" aria-expanded="false">Cart (<span id="cart-count">0</span>)</button>
+        <a class="btn btn-primary" href="#signup">Sign up</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <!-- Hero / Banner -->
+    <section class="hero" aria-label="Hero banner">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <h1>Delicious food, delivered to you</h1>
+          <p>Order from your favourite restaurants. Fast, fresh and hot — straight to your door.</p>
+
+          <form class="search-bar" role="search" aria-label="Search restaurants and dishes" id="search-form">
+            <label for="location" class="visually-hidden">Enter your location</label>
+            <input id="location" name="location" type="text" placeholder="Enter your location (e.g. Mumbai)" aria-label="Enter your location" value="Mumbai" required>
+
+            <label for="query" class="visually-hidden">Search</label>
+            <input id="query" name="query" type="search" placeholder="Search dishes or restaurants" aria-label="Search dishes or restaurants">
+
+            <button class="btn btn-search" type="submit" aria-label="Search">Search</button>
+          </form>
+
+          <div class="categories" aria-label="Browse by category">
+            <h3 class="visually-hidden">Browse by category</h3>
+            <ul class="category-list" id="categories">
+              <li><button class="category-btn" data-cat="All">All</button></li>
+              <li><button class="category-btn" data-cat="Pizza">🍕 Pizza</button></li>
+              <li><button class="category-btn" data-cat="Burgers">🍔 Burgers</button></li>
+              <li><button class="category-btn" data-cat="Sushi">🍣 Sushi</button></li>
+              <li><button class="category-btn" data-cat="Indian">🍛 Indian</button></li>
+              <li><button class="category-btn" data-cat="Desserts">🍰 Desserts</button></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="hero-image" aria-hidden="true">
+          <img src="https://source.unsplash.com/420x300.png?text=Delicious+Meals" alt="Assortment of delicious meals" style="width:100%;border-radius:12px;object-fit:cover">
+        </div>
+      </div>
+    </section>
+
+    <!-- layout: filters + menu + cart -->
+    <div class="layout">
+      <!-- filters -->
+      <aside class="filters" aria-label="Menu filters">
+        <form id="filters-form">
+          <label class="muted-small">Diet</label>
+          <label><input type="checkbox" name="veg" id="filter-veg"> Veg</label>
+          <label><input type="checkbox" name="spicy" id="filter-spicy"> Spicy</label>
+
+          <hr>
+          <label for="price-range" class="muted-small">Max price</label>
+          <input id="price-range" type="range" min="50" max="1000" value="1000">
+
+          <hr>
+          <label class="muted-small">Sort by</label>
+          <select id="sort">
+            <option value="popular">Most popular</option>
+            <option value="price-asc">Price: low → high</option>
+            <option value="price-desc">Price: high → low</option>
+          </select>
+
+          <div style="margin-top:12px">
+            <button class="btn btn-sm" type="button" id="clear-filters">Clear</button>
+          </div>
+        </form>
+      </aside>
+
+      <!-- menu + restaurants -->
+      <section>
+        <section id="restaurants" class="featured" aria-label="Featured restaurants">
+          <h2 class="section-title">Featured Restaurants</h2>
+          <div class="restaurants-grid" id="restaurants-grid">
+            <!-- cards rendered by JS -->
+          </div>
+        </section>
+
+        <section id="menu" class="menu" aria-label="Menu items" style="margin-top:18px">
+          <h2 class="section-title">Popular Menu Items</h2>
+          <div class="menu-grid" id="menu-grid">
+            <!-- menu items rendered by JS -->
+          </div>
+        </section>
+
+        <section id="offers" class="offers" aria-label="Promo offers">
+          <h2 class="section-title">Promo Offers</h2>
+          <ul class="offers-list">
+            <li>🎉 Get 30% OFF on your first order</li>
+            <li>🚚 Free delivery on orders above ₹500</li>
+            <li>🍔 Buy 1 Get 1 Free on Burgers every Friday</li>
+          </ul>
+        </section>
+
+        <section class="testimonials" aria-label="Customer testimonials">
+          <h2 class="section-title">What Our Customers Say</h2>
+          <div class="testimonial-grid">
+            <article class="testimonial"><p class="quote">"Foodie makes ordering food so easy and quick! Delivery is always on time."</p><p class="author">— Sarah M.</p></article>
+            <article class="testimonial"><p class="quote">"Great selection of restaurants and amazing offers. Highly recommend!"</p><p class="author">— James L.</p></article>
+            <article class="testimonial"><p class="quote">"The app is super user-friendly and customer support is fantastic."</p><p class="author">— Priya S.</p></article>
+          </div>
+        </section>
+      </section>
+
+      <!-- cart drawer -->
+      <aside id="cart" class="cart-drawer" aria-label="Your cart">
+        <div class="cart-header">
+          <h3>Your cart</h3>
+          <button class="btn btn-sm" id="close-cart" aria-label="Close cart">Close</button>
+        </div>
+
+        <div class="cart-list" id="cart-list">
+          <p class="muted-small">No items yet — add something tasty 🍽️</p>
+        </div>
+
+        <div class="cart-footer">
+          <div class="muted-small">Subtotal: ₹<span id="cart-subtotal">0</span></div>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button class="btn btn-outline" id="clear-cart">Clear</button>
+            <button class="btn btn-primary" id="checkout">Checkout</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- contact / signup -->
+    <section id="contact" class="contact" aria-label="Contact or sign up" style="margin-top:20px">
+      <h2 class="section-title">Contact / Sign up</h2>
+      <form class="contact-form" action="#" method="post" novalidate>
+        <div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:600px">
+          <label for="name">Full name <span aria-hidden="true">*</span>
+            <input id="name" name="name" type="text" placeholder="Your name" required>
+          </label>
+
+          <label for="email">Email <span aria-hidden="true">*</span>
+            <input id="email" name="email" type="email" placeholder="you@example.com" required>
+          </label>
+
+          <label for="phone">Phone
+            <input id="phone" name="phone" type="tel" placeholder="98765 43210">
+          </label>
+
+          <label for="message">Message
+            <textarea id="message" name="message" rows="2" placeholder="How can we help?"></textarea>
+          </label>
+        </div>
+
+        <div class="form-actions" style="margin-top:8px">
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="reset" class="btn btn-outline">Reset</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid" style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <div class="footer-brand"><img src="https://source.unsplash.com/40" alt="Foodie small logo" class="logo-small" style="vertical-align:middle;border-radius:6px"> <span style="margin-left:8px">Foodie — Fast. Fresh. Tasty.</span></div>
+      <div class="footer-contact">Contact: <a href="mailto:help@foodie.example">help@foodie.example</a></div>
+      <div><small>© <span id="year">2025</span> Foodie. All rights reserved.</small></div>
+    </div>
+  </footer>
+
+  <!-- Checkout modal (mock) -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-card">
+      <h3>Checkout</h3>
+      <p class="muted-small">This is a demo checkout — no real payment is taken.</p>
+
+      <form id="checkout-form">
+        <label>Full name<input name="fullname" required></label>
+        <label>Address<input name="address" required></label>
+        <label>Phone<input name="phone" required></label>
+        <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end">
+          <button type="button" class="btn btn-outline" id="cancel-checkout">Cancel</button>
+          <button type="submit" class="btn btn-primary">Place order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // -- data (in a real app this comes from an API) --
+    const MENU = [
+      { id: 'm1', name: 'Margherita Pizza', price: 299, category: 'Pizza', veg:true, spicy:false, img:'https://www.bing.com/th/id/OIP.8UeIFPMYwIErE1ShRYB9QAHaEo?w=222&h=211&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2' },
+      { id: 'm2', name: 'Classic Burger', price: 199, category: 'Burgers', veg:false, spicy:false, img:'https://www.bing.com/th/id/OIP.uPJNhmsCGP72JL72DmMLfwHaE8?w=285&h=211&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2' },
+      { id: 'm3', name: 'Sushi Platter', price: 699, category: 'Sushi', veg:false, spicy:false, img:'https://www.bing.com/th/id/OIP.TgxmuIvesH9jOPd66TgZnAHaE8?w=240&h=211&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2' },
+      { id: 'm5', name: 'Chocolate Cake', price: 149, category: 'Desserts', veg:true, spicy:false, img:'https://th.bing.com/th/id/OIP.GF2tdh12ZqTP6wVZ1Qi_pwHaHa?w=177&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3' },
+      { id: 'm6', name: 'Veg Noodles', price: 179, category: 'Indian', veg:true, spicy:false, img:'https://th.bing.com/th/id/OIP.xLKv9KEnCsFIvJKdcmlHygHaE8?w=307&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3' }
+    ];
+
+    const RESTAURANTS = [
+      { id:'r1', name:'Pizza Palace', type:'Pizza • Italian', rating:4.8, orders:'500+', img:'https://th.bing.com/th/id/OIP.nw3NeOaK_IBqlEsfOpNvawHaE8?w=239&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3' },
+      { id:'r2', name:'Burger Hub', type:'Burgers • Fast Food', rating:4.6, orders:'1k+', img:'https://th.bing.com/th/id/OIP.97mIUlPeSqsm5MpoC7xltgHaC2?w=307&h=135&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3' },
+      { id:'r3', name:'Sushi World', type:'Sushi • Japanese', rating:4.7, orders:'800+', img:'https://www.bing.com/th/id/OIP.sd84VnKA-tusOxL1-Z8FQQHaE7?w=251&h=211&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2' },
+      { id:'r4', name:'Spice Route', type:'Indian • Curry', rating:4.5, orders:'300+', img:'https://www.bing.com/th/id/OIP.onaPDXzWmQ_F3CeiyG6eugHaEK?w=244&h=211&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2' }
+    ];
+
+    // -- state --
+    const cart = new Map(); // key: id -> {item, qty}
+
+    // -- helpers --
+    function qs(sel){return document.querySelector(sel)}
+    function qsa(sel){return Array.from(document.querySelectorAll(sel))}
+
+    // render restaurants and menu
+    const restaurantsGrid = qs('#restaurants-grid');
+    const menuGrid = qs('#menu-grid');
+    const cartList = qs('#cart-list');
+    const cartCount = qs('#cart-count');
+    const cartSubtotalEl = qs('#cart-subtotal');
+
+    function renderRestaurants(){
+      restaurantsGrid.innerHTML = '';
+      RESTAURANTS.forEach(r => {
+        const el = document.createElement('article'); el.className='card';
+        el.innerHTML = `
+          <img class="card-img" src="${r.img}" alt="${r.name}">
+          <div class="card-body">
+            <h3 class="card-title">${r.name}</h3>
+            <p class="muted">${r.type}</p>
+            <div class="card-meta">⭐ ${r.rating} • ${r.orders}</div>
+          </div>`;
+        restaurantsGrid.appendChild(el);
+      });
+    }
+
+    function renderMenu(items){
+      menuGrid.innerHTML='';
+      if(items.length===0){ menuGrid.innerHTML='<p class="muted-small">No items match your filters.</p>'; return; }
+      items.forEach(it => {
+        const el = document.createElement('article'); el.className='menu-card';
+        el.innerHTML = `
+          <img class="menu-img" src="${it.img}" alt="${it.name}">
+          <div class="menu-body">
+            <h3>${it.name}</h3>
+            <p class="muted">${it.category} • ₹${it.price}</p>
+          </div>
+          <div class="menu-actions">
+            <div class="price">₹${it.price}</div>
+            <div><button class="btn btn-sm add" data-id="${it.id}">Add</button></div>
+          </div>`;
+        menuGrid.appendChild(el);
+      });
+    }
+
+    // filters/search
+    function applyFilters(){
+      const q = (qs('#query').value || '').toLowerCase().trim();
+      const cat = qsa('.category-btn.active').map(b=>b.dataset.cat)[0] || 'All';
+      const veg = qs('#filter-veg').checked;
+      const spicy = qs('#filter-spicy').checked;
+      const maxPrice = Number(qs('#price-range').value);
+      let out = MENU.filter(it=> {
+        if(cat!=='All' && it.category!==cat) return false;
+        if(veg && !it.veg) return false;
+        if(spicy && !it.spicy) return false;
+        if(it.price>maxPrice) return false;
+        if(q && !(it.name.toLowerCase().includes(q) || it.category.toLowerCase().includes(q))) return false;
+        return true;
+      });
+
+      const sort = qs('#sort').value;
+      if(sort==='price-asc') out.sort((a,b)=>a.price-b.price);
+      if(sort==='price-desc') out.sort((a,b)=>b.price-a.price);
+
+      renderMenu(out);
+    }
+
+    // cart functions
+    function updateCartUI(){
+      // count
+      const totalQty = Array.from(cart.values()).reduce((s,ci)=>s+ci.qty,0);
+      cartCount.textContent = totalQty;
+
+      // list
+      if(cart.size===0){ cartList.innerHTML = '<p class="muted-small">No items yet — add something tasty 🍽️</p>'; cartSubtotalEl.textContent='0'; return; }
+      cartList.innerHTML='';
+      let subtotal=0;
+      cart.forEach(({item,qty},id)=>{
+        subtotal += item.price * qty;
+        const row = document.createElement('div'); row.className='cart-item';
+        row.innerHTML = `
+          <img src="${item.img}" alt="${item.name}">
+          <div style="flex:1">
+            <div style="font-weight:600">${item.name}</div>
+            <div class="muted-small">₹${item.price} • ${item.category}</div>
+          </div>
+          <div class="qty">
+            <button class="btn btn-sm dec" data-id="${id}" aria-label="Decrease">-</button>
+            <div>${qty}</div>
+            <button class="btn btn-sm inc" data-id="${id}" aria-label="Increase">+</button>
+          </div>
+        `;
+        cartList.appendChild(row);
+      });
+      cartSubtotalEl.textContent = subtotal;
+    }
+
+    function addToCart(id){
+      const item = MENU.find(m=>m.id===id); if(!item) return;
+      if(cart.has(id)){ cart.get(id).qty += 1; } else { cart.set(id,{item,qty:1}); }
+      updateCartUI();
+    }
+    function changeQty(id,delta){
+      if(!cart.has(id)) return;
+      const obj = cart.get(id); obj.qty += delta; if(obj.qty<=0) cart.delete(id); updateCartUI();
+    }
+    function clearCart(){ cart.clear(); updateCartUI(); }
+
+    // UI wiring
+    document.addEventListener('click', e=>{
+      if(e.target.matches('.add')){ addToCart(e.target.dataset.id); }
+      if(e.target.matches('.inc')){ changeQty(e.target.dataset.id,1); }
+      if(e.target.matches('.dec')){ changeQty(e.target.dataset.id,-1); }
+      if(e.target.id==='clear-cart'){ clearCart(); }
+      if(e.target.id==='open-cart'){ qs('#cart').style.transform='translateX(0)'; qs('#open-cart').setAttribute('aria-expanded','true'); }
+      if(e.target.id==='close-cart'){ qs('#cart').style.transform='translateX(100%)'; qs('#open-cart').setAttribute('aria-expanded','false'); }
+    });
+
+    // category buttons
+    qsa('.category-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        qsa('.category-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilters();
+      });
+    });
+    // set default active 'All'
+    qsa('.category-btn').find(b=>b.dataset.cat==='All').classList.add('active');
+
+    // search & filters
+    qs('#search-form').addEventListener('submit', e=>{ e.preventDefault(); applyFilters(); });
+    qsa('#filters-form input, #filters-form select').forEach(el=>el.addEventListener('input', applyFilters));
+    qs('#clear-filters').addEventListener('click', ()=>{ qs('#filters-form').reset(); qs('#price-range').value=1000; applyFilters(); });
+
+    // checkout modal
+    const modal = qs('#modal');
+    qs('#checkout').addEventListener('click', ()=>{
+      if(cart.size===0){ alert('Your cart is empty — add items first.'); return; }
+      modal.classList.add('active'); modal.setAttribute('aria-hidden','false');
+    });
+    qs('#cancel-checkout').addEventListener('click', ()=>{ modal.classList.remove('active'); modal.setAttribute('aria-hidden','true'); });
+    qs('#checkout-form').addEventListener('submit', e=>{
+      e.preventDefault();
+      // pretend to place order
+      modal.classList.remove('active'); modal.setAttribute('aria-hidden','true');
+      alert('Thanks! Your order has been placed (demo).');
+      clearCart();
+    });
+
+    // init
+    renderRestaurants(); renderMenu(MENU); updateCartUI();
+    // set year
+    qs('#year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
